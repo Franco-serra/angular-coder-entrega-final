@@ -1,75 +1,76 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, forkJoin } from 'rxjs';
 import { Student } from '../../shared/interface/Students'; 
-import { BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { map, switchMap, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 }) 
-
 export class StudentsService {
-  private _students: Student[] = [
-    { id: 1, firstName: 'Juan', lastName: 'Pérez', email: 'juan@gmail.com', course: 'angular' },
-    { id: 2, firstName: 'Ana', lastName: 'López', email: 'ana@hotmail.com', course: 'vue' },
-  ];  
+  private apiUrl = `${environment.apiUrl}/students`;
 
-  private studentsSubject = new BehaviorSubject<Student[]>(this._students);
-  students$ = this.studentsSubject.asObservable();
+  constructor(private http: HttpClient) { }
 
-  studentsAngular$ = this.students$.pipe(
-    map(students => students.filter(student => student.course.toLowerCase() === 'angular'))
-  );
-
-  studentsAngularCount$ = this.studentsAngular$.pipe(
-    map(students => students.length)
-  );
-
-  studentsCount$ = this.students$.pipe(        
-    map(students => students.length)
-  );
-
-  get students(): Student[] {
-    return [...this._students];
+  getStudents(): Observable<Student[]> {
+    return this.http.get<Student[]>(this.apiUrl);
   }
 
-  get studentsObs() {
-    return this.studentsSubject.asObservable();
+  getStudentById(id: string): Observable<Student> {
+    return this.http.get<Student>(`${this.apiUrl}/${id}`);
   }
 
-  addStudent(student: Student): void {
-    const existingIds = this._students.map(s => s.id || 0);
-    const newId = Math.max(...existingIds, 0) + 1;
-    const newStudent = { ...student, id: newId };
-    this._students = [...this._students, newStudent];
-    this.studentsSubject.next(this._students);
+  createStudent(student: Omit<Student, 'id'>): Observable<Student> {
+    return this.http.post<Student>(this.apiUrl, student);
   }
 
-  addStudentsObs(students: Student[]): void {
-    const existingIds = this._students.map(s => s.id || 0);
-    const maxId = Math.max(...existingIds, 0);
-    const newStudents = students.map((student, index) => ({
-      ...student,
-      id: maxId + index + 1
-    }));
-    this._students = [...this._students, ...newStudents];
-    this.studentsSubject.next(this._students);
+  createStudents(students: Omit<Student, 'id'>[]): Observable<Student[]> {
+    const createRequests = students.map(student => this.createStudent(student));
+    return forkJoin(createRequests);
   }
 
-  updateStudent(updatedStudent: Student): void {
-    this._students = this._students.map(student => 
-      student.id === updatedStudent.id ? updatedStudent : student
+  updateStudent(id: string, student: Student): Observable<Student> {
+    return this.http.put<Student>(`${this.apiUrl}/${id}`, student);
+  }
+
+  deleteStudent(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  // Método para obtener los cursos de un estudiante
+  getStudentCourses(studentId: string): Observable<string[]> {
+    return this.http.get<Student>(`${this.apiUrl}/${studentId}`).pipe(
+      map(student => student.courses)
     );
-    this.studentsSubject.next(this._students);
   }
 
-  deleteStudent(studentId: number): void {
-    this._students = this._students.filter(student => student.id !== studentId);
-    this.studentsSubject.next(this._students);
+  // Método para agregar un curso a un estudiante
+  addCourseToStudent(studentId: string, courseId: string): Observable<Student> {
+    return this.getStudentById(studentId).pipe(
+      switchMap(student => {
+        if (!student.courses.includes(courseId)) {
+          const updatedStudent = {
+            ...student,
+            courses: [...student.courses, courseId]
+          };
+          return this.updateStudent(studentId, updatedStudent);
+        }
+        return of(student);
+      })
+    );
   }
 
-  getStudentById(id: number): Student | undefined {
-    return this._students.find(student => student.id === id);
+  // Método para remover un curso de un estudiante
+  removeCourseFromStudent(studentId: string, courseId: string): Observable<Student> {
+    return this.getStudentById(studentId).pipe(
+      switchMap(student => {
+        const updatedStudent = {
+          ...student,
+          courses: student.courses.filter(id => id !== courseId)
+        };
+        return this.updateStudent(studentId, updatedStudent);
+      })
+    );
   }
-
-  constructor() {}
 }

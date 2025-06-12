@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Student } from '../../../../shared/interface/Students';
-import { StudentsService } from '../../../../core/services/students.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, map, switchMap } from 'rxjs';
+import { StudentsService } from '../../../../core/services/students.service';
+import { Student } from '../../../../shared/interface/Students';
 import { TitleService } from '../../../../core/services/title.service';
+import { switchMap, map, of } from 'rxjs';
+import { CoursesService } from '../../../../core/services/courses.service';
+import { Course } from '../../../../shared/interface/Courses';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-students-form',
@@ -13,73 +16,65 @@ import { TitleService } from '../../../../core/services/title.service';
   styleUrl: './students-form.component.css'
 })
 export class StudentsFormComponent implements OnInit {
-  formGroup: FormGroup;
+  studentForm: FormGroup;
   isEditMode = false;
-  isViewMode = false;
-  studentId?: number;
+  studentId?: string;
+  courses$: Observable<Course[]>;
 
   constructor(
     private fb: FormBuilder, 
     private studentsService: StudentsService,
-    private route: ActivatedRoute,
+    private coursesService: CoursesService,
     private router: Router,
+    private route: ActivatedRoute,
     private titleService: TitleService
   ) {
-    this.formGroup = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+    this.courses$ = this.coursesService.getCourses();
+    this.studentForm = this.fb.group({
+      name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      course: ['', Validators.required],
+      phone: ['', Validators.required],
+      address: ['', Validators.required],
+      city: ['', Validators.required],
+      state: ['', Validators.required],
+      zipCode: ['', Validators.required],
+      status: ['active', Validators.required],
+      courses: [[], Validators.required]
     });
   }
 
   ngOnInit(): void {
-    this.route.url.subscribe(segments => {
-      const lastSegment = segments[segments.length - 1]?.path;
-      this.isViewMode = lastSegment === 'view';
-      this.isEditMode = lastSegment === 'edit';
-      
-      let title = 'Estudiantes';
-      if (this.isEditMode) title = 'Editar Estudiante';
-      if (this.isViewMode) title = 'Ver Estudiante';
-      this.titleService.setTitle(title);
-      
-      if (this.isViewMode || this.isEditMode) {
         this.route.params.pipe(
-          map(params => params['id']),
-          switchMap(id => this.studentsService.studentsObs.pipe(
-            map(students => students.find(s => s.id === +id))
-          ))
+      switchMap(params => {
+        const id = params['id'];
+        if (id) {
+          this.isEditMode = true;
+          this.studentId = id;
+          return this.studentsService.getStudentById(id);
+        }
+        return of(null);
+      })
         ).subscribe(student => {
           if (student) {
-            this.studentId = student.id;
-            this.formGroup.patchValue(student);
-            if (this.isViewMode) {
-              this.formGroup.disable();
-            }
-          } else {
-            this.router.navigate(['/students']);
-          }
-        });
+        this.studentForm.patchValue(student);
       }
     });
-  }
 
-  submit(): void {
-    if (this.formGroup.valid) {
-      const student: Student = {
-        ...this.formGroup.value,
-        id: this.studentId
-      };
+    const title = this.route.snapshot.data['title'] || (this.isEditMode ? 'Editar Estudiante' : 'Nuevo Estudiante');
+    this.titleService.setTitle(title);
+          }
+
+  onSubmit(): void {
+    if (this.studentForm.valid) {
+      const studentData: Omit<Student, 'id'> = this.studentForm.value;
 
       if (this.isEditMode && this.studentId) {
-        this.studentsService.updateStudent(student);
+        this.studentsService.updateStudent(this.studentId, { ...studentData, id: this.studentId })
+          .subscribe(() => this.router.navigate(['/students']));
       } else {
-        this.studentsService.addStudentsObs([student]);
+        this.studentsService.createStudents([studentData])
+          .subscribe(() => this.router.navigate(['/students']));
       }
-      
-      this.formGroup.reset();
-      this.router.navigate(['/students']);
     }
   }
 

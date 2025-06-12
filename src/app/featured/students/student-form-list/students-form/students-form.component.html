@@ -1,50 +1,96 @@
-<div class="contenido">
-    <h2>{{ isViewMode ? 'Detalles del Estudiante' : (isEditMode ? 'Editar Estudiante' : 'Nuevo Estudiante') }}</h2>
-    <form [formGroup]="formGroup" (ngSubmit)="submit()">
+<div class="form-container">
+  <h2>{{ isEditMode ? 'Editar Estudiante' : 'Nuevo Estudiante' }}</h2>
+
+  <form [formGroup]="studentForm" (ngSubmit)="onSubmit()" class="student-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="name" placeholder="Nombre completo">
+      <mat-error *ngIf="studentForm.get('name')?.hasError('required')">
+        El nombre es requerido
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" placeholder="ejemplo@email.com">
+      <mat-error *ngIf="studentForm.get('email')?.hasError('required')">
+        El email es requerido
+      </mat-error>
+      <mat-error *ngIf="studentForm.get('email')?.hasError('email')">
+        Ingrese un email válido
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Teléfono</mat-label>
+      <input matInput formControlName="phone" placeholder="(123) 456-7890">
+      <mat-error *ngIf="studentForm.get('phone')?.hasError('required')">
+        El teléfono es requerido
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Dirección</mat-label>
+      <input matInput formControlName="address" placeholder="Dirección">
+      <mat-error *ngIf="studentForm.get('address')?.hasError('required')">
+        La dirección es requerida
+      </mat-error>
+    </mat-form-field>
+
         <div class="form-row">
-            <mat-form-field class="example-full-width" class="w-75">
-                <mat-label>Nombre</mat-label>
-                <input matInput formControlName="firstName" required>
-                <div *ngIf="formGroup.get('firstName')?.invalid && formGroup.get('firstName')?.touched">
-                    El nombre es requerido.
-                </div>
+      <mat-form-field appearance="outline">
+        <mat-label>Ciudad</mat-label>
+        <input matInput formControlName="city" placeholder="Ciudad">
+        <mat-error *ngIf="studentForm.get('city')?.hasError('required')">
+          La ciudad es requerida
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Estado</mat-label>
+        <input matInput formControlName="state" placeholder="Estado">
+        <mat-error *ngIf="studentForm.get('state')?.hasError('required')">
+          El estado es requerido
+        </mat-error>
             </mat-form-field>
-            <mat-form-field class="example-full-width" class="w-75">
-                <mat-label>Apellido</mat-label>
-                <input matInput formControlName="lastName" required>
-                <div *ngIf="formGroup.get('lastName')?.invalid && formGroup.get('lastName')?.touched">
-                    El apellido es requerido.
-                </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Código Postal</mat-label>
+        <input matInput formControlName="zipCode" placeholder="Código Postal">
+        <mat-error *ngIf="studentForm.get('zipCode')?.hasError('required')">
+          El código postal es requerido
+        </mat-error>
             </mat-form-field>
-            <br>
-            <mat-form-field class="example-full-width" class="w-75">
-                <mat-label>Email</mat-label>
-                <input matInput formControlName="email" required>
-                <div *ngIf="formGroup.get('email')?.invalid && formGroup.get('email')?.touched">
-                    Un email válido es requerido.
                 </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Estado</mat-label>
+      <mat-select formControlName="status">
+        <mat-option value="active">Activo</mat-option>
+        <mat-option value="inactive">Inactivo</mat-option>
+      </mat-select>
+      <mat-error *ngIf="studentForm.get('status')?.hasError('required')">
+        El estado es requerido
+      </mat-error>
             </mat-form-field>
-            <br>
-            <mat-form-field class="w-50">
-                <mat-label>Curso</mat-label>
-                <mat-select formControlName="course" required>
-                    <mat-option value="angular">Angular</mat-option>
-                    <mat-option value="react">React</mat-option>
-                    <mat-option value="vuejs">VueJS</mat-option>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Cursos</mat-label>
+      <mat-select formControlName="courses" multiple>
+        <mat-option *ngFor="let course of courses$ | async" [value]="course.id">
+          {{course.name}}
+        </mat-option>
                 </mat-select>
-                <div *ngIf="formGroup.get('course')?.invalid && formGroup.get('course')?.touched">
-                    El curso es requerido.
-                </div>
+      <mat-error *ngIf="studentForm.get('courses')?.hasError('required')">
+        Debe seleccionar al menos un curso
+      </mat-error>
             </mat-form-field>
-            <br>
-            <div class="button-row">
-                <button mat-flat-button type="submit" color="primary" *ngIf="!isViewMode">
-                    {{ isEditMode ? 'Actualizar' : 'Agregar' }} Estudiante
+
+    <div class="form-actions">
+      <button mat-button type="button" routerLink="/students">Cancelar</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="studentForm.invalid">
+        {{ isEditMode ? 'Actualizar' : 'Crear' }}
                 </button>
-                <button mat-flat-button type="button" (click)="cancel()" color="warn" *ngIf="isViewMode || isEditMode">
-                    {{ isViewMode ? 'Volver' : 'Cancelar' }}
-                </button>
-            </div>
         </div>    
     </form>
 </div>

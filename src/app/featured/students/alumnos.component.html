@@ -1,4 +1,51 @@
-<div class="container">
-  <app-students-form *ngIf="isAdmin$ | async"></app-students-form>
-  <app-students-list></app-students-list>
+<div class="students-container">
+  <div class="header">
+    <h1>Lista de Estudiantes</h1>
+    <button mat-raised-button color="primary" (click)="onNewStudent()">
+      <mat-icon>add</mat-icon>
+      Nuevo Estudiante
+    </button>
+  </div>
+
+  <table mat-table [dataSource]="(students$ | async) || []" class="mat-elevation-z8">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Nombre</th>
+      <td mat-cell *matCellDef="let student">{{student.name}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef>Email</th>
+      <td mat-cell *matCellDef="let student">{{student.email}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="phone">
+      <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+      <td mat-cell *matCellDef="let student">{{student.phone}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Estado</th>
+      <td mat-cell *matCellDef="let student">
+        <span [class]="student.status">{{student.status}}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Acciones</th>
+      <td mat-cell *matCellDef="let student">
+        <button mat-icon-button color="primary" (click)="onView(student)" matTooltip="Ver detalles">
+          <mat-icon>visibility</mat-icon>
+        </button>
+        <button mat-icon-button color="accent" (click)="onEdit(student)" matTooltip="Editar estudiante">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="onDelete(student)" matTooltip="Eliminar estudiante">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 </div>
