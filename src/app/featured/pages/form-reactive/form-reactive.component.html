@@ -1,0 +1,30 @@
+
+<form [formGroup]="form" class="form-container" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Nombre</mat-label>
+    <input matInput formControlName="name" />
+      <mat-error *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+        El Nombre es inválido
+    </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" />
+      <mat-error *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+        El Email es inválido
+    </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Mensaje</mat-label>
+    <textarea matInput formControlName="message" rows="4"></textarea>
+      <mat-error *ngIf="form.get('message')?.invalid && form.get('message')?.touched">
+        El Mensaje es inválido
+    </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+    Enviar
+    </button>
+</form>

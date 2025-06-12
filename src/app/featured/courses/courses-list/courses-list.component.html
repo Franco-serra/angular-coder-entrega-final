@@ -1,0 +1,39 @@
+<div class="container">
+  <h2>Lista de Cursos</h2>
+  <button mat-raised-button color="primary" (click)="onNewCourse()" *ngIf="isAdmin$ | async">Nuevo Curso</button>
+  
+  <table mat-table [dataSource]="courses" class="mat-elevation-z8">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Nombre </th>
+      <td mat-cell *matCellDef="let course"> {{course.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Descripción </th>
+      <td mat-cell *matCellDef="let course"> {{course.description}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef> Duración </th>
+      <td mat-cell *matCellDef="let course"> {{course.duration}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let course">
+        <button mat-icon-button color="primary" (click)="onView(course)" matTooltip="Ver detalles">
+          <mat-icon>visibility</mat-icon>
+        </button>
+        <button mat-icon-button color="accent" (click)="onEdit(course)" *ngIf="isAdmin$ | async" matTooltip="Editar">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="onDelete(course)" *ngIf="isAdmin$ | async" matTooltip="Eliminar">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div> 

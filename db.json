@@ -1,0 +1,108 @@
+{
+  "auth": {
+    "login": {
+      "email": "admin@example.com",
+      "password": "admin12345",
+      "token": "fake-jwt-token",
+      "user": {
+        "id": 1,
+        "name": "Admin",
+        "role": "admin"
+      }
+    }
+  },
+  "users": [
+    {
+      "name": "Admin",
+      "email": "admin@example.com",
+      "role": "admin",
+      "password": "admin12345",
+      "id": "rgstgfU"
+    },
+    {
+      "name": "admin2",
+      "email": "admin2@example.com",
+      "role": "admin",
+      "password": "admin12345",
+      "id": "df22"
+    },
+    {
+      "name": "user",
+      "email": "user@example.com",
+      "role": "user",
+      "password": "admin12345",
+      "id": "86ff"
+    },
+    {
+      "name": "user2",
+      "email": "user2@example.com",
+      "role": "user",
+      "password": "admin12345",
+      "id": "983e"
+    }
+  ],
+  "courses": [
+    {
+      "id": "1",
+      "name": "Angular Fundamentals",
+      "description": "Learn the basics of Angular framework",
+      "duration": "40 hours",
+      "instructor": "John Doe",
+      "students": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Advanced TypeScript",
+      "description": "Deep dive into TypeScript features",
+      "duration": "30 hours",
+      "instructor": "Jane Smith",
+      "students": [
+        1,
+        3
+      ]
+    },
+    {
+      "id": "3",
+      "name": "RxJS Masterclass",
+      "description": "Master reactive programming with RxJS",
+      "duration": "25 hours",
+      "instructor": "Mike Johnson",
+      "students": [
+        2
+      ]
+    }
+  ],
+  "students": [
+    {
+      "id": "1",
+      "name": "Alice Johnson",
+      "email": "alice@example.com",
+      "courses": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Bob Smith",
+      "email": "bob@example.com",
+      "courses": [
+        1,
+        3
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Carol White",
+      "email": "carol@example.com",
+      "courses": [
+        1,
+        2
+      ]
+    }
+  ]
+}

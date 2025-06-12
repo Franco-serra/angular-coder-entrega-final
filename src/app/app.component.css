@@ -1,0 +1,42 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+mat-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.app-sidenav {
+    background-color: #4A4A4A;
+    min-width: 250px;
+    padding: 20px;
+}
+
+.app-container {
+    height: 100vh;
+}
+
+.main-content {
+    padding: 20px;
+}
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
+
+.user-email {
+    margin-right: 15px;
+    font-size: 14px;
+}
+
+.route-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 0 1rem;
+    color: black;
+    text-transform: capitalize;
+}

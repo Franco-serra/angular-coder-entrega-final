@@ -1,0 +1,21 @@
+.example-sidenav {
+    width: 250px; 
+}
+
+
+.example-sidenav-content {
+    margin-left: 250px; 
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-container {
+    display: flex;
+    min-height: 100vh
+}
+
+
+.content {
+    flex-grow: 1;
+}

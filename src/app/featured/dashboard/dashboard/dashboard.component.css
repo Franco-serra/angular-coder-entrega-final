@@ -1,0 +1,30 @@
+.dashboard-container {
+  padding: 20px;
+}
+
+.dashboard-content {
+  margin-top: 20px;
+}
+
+mat-card {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+mat-card-header {
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+li:last-child {
+  border-bottom: none;
+}

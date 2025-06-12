@@ -1,0 +1,29 @@
+<div class="container">
+  <mat-card class="details-card">
+    <mat-card-header>
+      <mat-card-title>Detalles del Usuario</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content *ngIf="data">
+      <div class="detail-row">
+        <span class="label">Nombre:</span>
+        <span class="value">{{ data.name }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Email:</span>
+        <span class="value">{{ data.email }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Rol:</span>
+        <span class="value">{{ data.role === 'admin' ? 'Administrador' : 'Usuario' }}</span>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-raised-button color="primary" (click)="onClose()">
+        <mat-icon>close</mat-icon>
+        Cerrar
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div> 

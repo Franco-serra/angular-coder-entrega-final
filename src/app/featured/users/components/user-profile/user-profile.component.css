@@ -1,0 +1,50 @@
+.container {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.profile-card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profile-card mat-card-title {
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.detail-row {
+  display: flex;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row .label {
+  font-weight: 500;
+  width: 120px;
+  color: #666;
+}
+
+.detail-row .value {
+  flex: 1;
+  color: #333;
+}
+
+mat-card-actions {
+  padding: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+mat-card-actions button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+} 

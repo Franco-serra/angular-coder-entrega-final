@@ -1,0 +1,29 @@
+<div class="container">
+  <mat-card class="course-details-card">
+    <mat-card-header>
+      <mat-card-title>Detalles del Curso</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content *ngIf="course">
+      <div class="detail-row">
+        <span class="label">Nombre:</span>
+        <span class="value">{{ course.name }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Descripción:</span>
+        <span class="value">{{ course.description }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Duración:</span>
+        <span class="value">{{ course.duration }}</span>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-raised-button color="primary" (click)="onBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div> 

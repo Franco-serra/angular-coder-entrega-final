@@ -1,0 +1,50 @@
+<div class="contenido">
+    <h2>{{ isViewMode ? 'Detalles del Estudiante' : (isEditMode ? 'Editar Estudiante' : 'Nuevo Estudiante') }}</h2>
+    <form [formGroup]="formGroup" (ngSubmit)="submit()">
+        <div class="form-row">
+            <mat-form-field class="example-full-width" class="w-75">
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="firstName" required>
+                <div *ngIf="formGroup.get('firstName')?.invalid && formGroup.get('firstName')?.touched">
+                    El nombre es requerido.
+                </div>
+            </mat-form-field>
+            <mat-form-field class="example-full-width" class="w-75">
+                <mat-label>Apellido</mat-label>
+                <input matInput formControlName="lastName" required>
+                <div *ngIf="formGroup.get('lastName')?.invalid && formGroup.get('lastName')?.touched">
+                    El apellido es requerido.
+                </div>
+            </mat-form-field>
+            <br>
+            <mat-form-field class="example-full-width" class="w-75">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" required>
+                <div *ngIf="formGroup.get('email')?.invalid && formGroup.get('email')?.touched">
+                    Un email válido es requerido.
+                </div>
+            </mat-form-field>
+            <br>
+            <mat-form-field class="w-50">
+                <mat-label>Curso</mat-label>
+                <mat-select formControlName="course" required>
+                    <mat-option value="angular">Angular</mat-option>
+                    <mat-option value="react">React</mat-option>
+                    <mat-option value="vuejs">VueJS</mat-option>
+                </mat-select>
+                <div *ngIf="formGroup.get('course')?.invalid && formGroup.get('course')?.touched">
+                    El curso es requerido.
+                </div>
+            </mat-form-field>
+            <br>
+            <div class="button-row">
+                <button mat-flat-button type="submit" color="primary" *ngIf="!isViewMode">
+                    {{ isEditMode ? 'Actualizar' : 'Agregar' }} Estudiante
+                </button>
+                <button mat-flat-button type="button" (click)="cancel()" color="warn" *ngIf="isViewMode || isEditMode">
+                    {{ isViewMode ? 'Volver' : 'Cancelar' }}
+                </button>
+            </div>
+        </div>    
+    </form>
+</div>
