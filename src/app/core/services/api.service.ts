@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'https://mockapi.io/api/v1'; // Reemplazar con tu URL de mockapi
+  private apiUrl = 'http://localhost:3000'; // URL de json-server
 
   constructor(private http: HttpClient) { }
 

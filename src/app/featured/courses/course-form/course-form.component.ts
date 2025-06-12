@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CoursesService } from '../../../core/services/courses.service';
 import { Course } from '../../../shared/interface/Courses';
 import { TitleService } from '../../../core/services/title.service';
+import { switchMap, tap, of } from 'rxjs';
 
 @Component({
   selector: 'app-course-form',
@@ -14,7 +15,7 @@ import { TitleService } from '../../../core/services/title.service';
 export class CourseFormComponent implements OnInit {
   courseForm: FormGroup;
   isEditMode = false;
-  courseId?: number;
+  courseId?: string;
 
   constructor(
     private fb: FormBuilder,
@@ -31,34 +32,38 @@ export class CourseFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      if (params['id']) {
-        this.isEditMode = true;
-        this.courseId = +params['id'];
-        const course = this.coursesService.getCourseById(this.courseId);
+    this.route.params.pipe(
+      switchMap(params => {
+        const id = params['id'];
+        if (id) {
+          this.isEditMode = true;
+          this.courseId = id;
+          return this.coursesService.getCourseById(id);
+        }
+        return of(null);
+      }),
+      tap(course => {
         if (course) {
           this.courseForm.patchValue(course);
         }
-      }
-    });
+      })
+    ).subscribe();
+
     const title = this.route.snapshot.data['title'] || (this.isEditMode ? 'Editar Curso' : 'Nuevo Curso');
     this.titleService.setTitle(title);
   }
 
   onSubmit(): void {
     if (this.courseForm.valid) {
-      const courseData: Course = {
-        ...this.courseForm.value,
-        id: this.courseId
-      };
+      const courseData: Omit<Course, 'id'> = this.courseForm.value;
 
       if (this.isEditMode && this.courseId) {
-        this.coursesService.updateCourse(courseData);
+        this.coursesService.updateCourse(this.courseId, { ...courseData, id: parseInt(this.courseId) })
+          .subscribe(() => this.router.navigate(['/courses']));
       } else {
-        this.coursesService.addCourse(courseData);
+        this.coursesService.createCourse(courseData)
+          .subscribe(() => this.router.navigate(['/courses']));
       }
-
-      this.router.navigate(['/courses']);
     }
   }
 } 

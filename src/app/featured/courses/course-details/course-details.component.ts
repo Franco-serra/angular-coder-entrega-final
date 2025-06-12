@@ -7,6 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TitleService } from '../../../core/services/title.service';
+import { Observable, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-course-details',
@@ -21,7 +22,7 @@ import { TitleService } from '../../../core/services/title.service';
   ]
 })
 export class CourseDetailsComponent implements OnInit {
-  course: Course | undefined;
+  course$!: Observable<Course>;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,12 +32,15 @@ export class CourseDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      const courseId = +params['id'];
-      this.course = this.coursesService.getCourseById(courseId);
-      if (this.course) {
-        this.titleService.setTitle(`Detalles del Curso: ${this.course.name}`);
-      }
+    this.course$ = this.route.params.pipe(
+      switchMap(params => {
+        const courseId = params['id'];
+        return this.coursesService.getCourseById(courseId);
+      })
+    );
+
+    this.course$.subscribe(course => {
+      this.titleService.setTitle(`Detalles del Curso: ${course.name}`);
     });
   }
 
