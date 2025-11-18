@@ -2,8 +2,11 @@
     "version": 2,
     "builds": [
         {
-            "src": "dist/angular-coder/**",
-            "use": "@vercel/static"
+            "src": "package.json",
+            "use": "@vercel/static-build",
+            "config": {
+                "distDir": "dist/angular-coder"
+            }
         }
     ],
     "routes": [
