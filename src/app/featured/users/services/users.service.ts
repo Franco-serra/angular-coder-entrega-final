@@ -10,7 +10,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class UsersService {
   private users: User[] = [];
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = 'https://student-backend-production-c181.up.railway.app';
 
   constructor(private http: HttpClient) {
     // Cargar usuarios del db.json al iniciar el servicio

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://localhost:3000'; // URL de json-server
+  private apiUrl = 'https://student-backend-production-c181.up.railway.app'; // URL de json-server
 
   constructor(private http: HttpClient) { }
 
